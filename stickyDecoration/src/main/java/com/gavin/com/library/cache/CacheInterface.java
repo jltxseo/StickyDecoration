@@ -28,4 +28,9 @@ public interface CacheInterface<T> {
      */
     void remove(int position);
 
+    /**
+     * 全部清除缓存
+     */
+    void clear();
+
 }

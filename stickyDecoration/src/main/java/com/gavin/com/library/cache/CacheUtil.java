@@ -78,4 +78,15 @@ public class CacheUtil<T> implements CacheInterface<T> {
             mSoftCache.remove(position);
         }
     }
+
+    @Override
+    public void clear() {
+        if (mStrongCache != null){
+            mStrongCache.clear();
+        }
+
+        if (mSoftCache != null) {
+            mSoftCache.clear();
+        }
+    }
 }

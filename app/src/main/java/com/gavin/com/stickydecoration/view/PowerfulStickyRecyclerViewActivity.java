@@ -2,6 +2,7 @@ package com.gavin.com.stickydecoration.view;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -120,7 +121,15 @@ public class PowerfulStickyRecyclerViewActivity extends AppCompatActivity {
                 return dataList.size();
             }
         };
+        decoration.setAdapter(mAdapter);
         mRv.setAdapter(mAdapter);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                dataList = CityUtil.getCityList1();
+                mAdapter.notifyDataSetChanged();
+            }
+        },3000);
     }
 
     static class Holder extends RecyclerView.ViewHolder {

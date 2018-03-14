@@ -39,6 +39,9 @@ public class PowerfulStickyDecoration extends BaseDecoration {
 
     private PowerGroupListener mGroupListener;
 
+
+    private final PowerfulStickyDecoration.StickyDecorationDataObserver mObserver = new PowerfulStickyDecoration.StickyDecorationDataObserver();
+    private RecyclerView.Adapter mAdapter;
     private PowerfulStickyDecoration(PowerGroupListener groupListener) {
         super();
         this.mGroupListener = groupListener;
@@ -113,6 +116,22 @@ public class PowerfulStickyDecoration extends BaseDecoration {
         c.drawBitmap(bitmap, left, bottom - mGroupHeight, null);
     }
 
+
+    /**
+     * 修复 mAdapter.notifyDataSetChanged();全部替换数据时分组头部还是使用旧的头部的bug
+     * @param adapter
+     */
+    public void setAdapter(RecyclerView.Adapter adapter){
+        if(mAdapter != null){
+            mAdapter.unregisterAdapterDataObserver(mObserver);
+        }
+
+        mAdapter = adapter;
+        if (adapter != null) {
+            adapter.registerAdapterDataObserver(mObserver);
+        }
+    }
+
     /**
      * 对view进行测量和布局
      *
@@ -185,6 +204,27 @@ public class PowerfulStickyDecoration extends BaseDecoration {
         mHeadViewCache.put(position, viewGroup);
         recyclerView.invalidate();
     }
+
+
+    /**
+     * 添加Adapter监听器，修复
+     */
+    private class StickyDecorationDataObserver extends RecyclerView.AdapterDataObserver{
+
+
+        @Override
+        public void onChanged() {
+            if(mHeadViewCache != null){
+                mHeadViewCache.clear();
+            }
+            if(mBitmapCache != null){
+                mBitmapCache.clear();
+            }
+            super.onChanged();
+        }
+    }
+
+
 
     public static class Builder {
         PowerfulStickyDecoration mDecoration;
